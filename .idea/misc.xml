@@ -10,6 +10,11 @@
         <option value="$PROJECT_DIR$/fashion_store_website/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/fashion_store_website/pom.xml" />
+      </set>
+    </option>
     <option name="workspaceImportForciblyTurnedOn" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="23" project-jdk-type="JavaSDK">
