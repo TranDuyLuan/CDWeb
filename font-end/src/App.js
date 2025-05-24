@@ -26,38 +26,42 @@ import AdminOrderDetailsPage from './component/admin/AdminOrderDetailsPage';
 function App() {
   return (
     <BrowserRouter>
-    <CartProvider>
-      <Navbar/>
-        <Routes>
-          {/* OUR ROUTES */}
-          <Route exact path='/' element={<Home/>}/>
-          <Route path='/product/:productId' element={<ProductDetailsPage/>} />
-          <Route path='/categories' element={<CategoryListPage/>}/>
-          <Route path='/category/:categoryId' element={<CategoryProductsPage/>} />
-          <Route path='/cart' element={<CartPage/>}/>
-          <Route path='/register' element={<RegisterPage/>}/>
-          <Route path='/login' element={<LoginPage/>}/>
+      <CartProvider>
+        <div className="app-container">
+          <Navbar/>
+          <div className="main-content">
+            <Routes>
+              {/* OUR ROUTES */}
+              <Route exact path='/' element={<Home/>}/>
+              <Route path='/product/:productId' element={<ProductDetailsPage/>}/>
+              <Route path='/categories' element={<CategoryListPage/>}/>
+              <Route path='/category/:categoryId' element={<CategoryProductsPage/>}/>
+              <Route path='/cart' element={<CartPage/>}/>
+              <Route path='/register' element={<RegisterPage/>}/>
+              <Route path='/login' element={<LoginPage/>}/>
 
-          <Route path='/profile' element={<ProtectedRoute element={<ProfilePage/>} />} />
-          <Route path='/add-address' element={<ProtectedRoute element={<AddressPage/>} />} />
-          <Route path='/edit-address' element={<ProtectedRoute element={<AddressPage/>} />} />
+              <Route path='/profile' element={<ProtectedRoute element={<ProfilePage/>}/>}/>
+              <Route path='/add-address' element={<ProtectedRoute element={<AddressPage/>}/>}/>
+              <Route path='/edit-address' element={<ProtectedRoute element={<AddressPage/>}/>}/>
 
 
-          <Route path='/admin' element={<AdminRoute element={<AdminPage/>} />} />
-          <Route path='/admin/categories' element={<AdminRoute element={<AdminCategoryPage/>} />} />
-          <Route path='/admin/add-category' element={<AdminRoute element={<AddCategory/>} />} />
-          <Route path='/admin/edit-category/:categoryId' element={<AdminRoute element={<EditCategory/>} />} />
-          <Route path='/admin/products' element={<AdminRoute element={<AdminProductPage/>} />} />
-          <Route path='/admin/add-product' element={<AdminRoute element={<AddProductPage/>} />} />
-          <Route path='/admin/edit-product/:productId' element={<AdminRoute element={<EditProductPage/>} />} />
+              <Route path='/admin' element={<AdminRoute element={<AdminPage/>}/>}/>
+              <Route path='/admin/categories' element={<AdminRoute element={<AdminCategoryPage/>}/>}/>
+              <Route path='/admin/add-category' element={<AdminRoute element={<AddCategory/>}/>}/>
+              <Route path='/admin/edit-category/:categoryId' element={<AdminRoute element={<EditCategory/>}/>}/>
+              <Route path='/admin/products' element={<AdminRoute element={<AdminProductPage/>}/>}/>
+              <Route path='/admin/add-product' element={<AdminRoute element={<AddProductPage/>}/>}/>
+              <Route path='/admin/edit-product/:productId' element={<AdminRoute element={<EditProductPage/>}/>}/>
 
-          <Route path='/admin/orders' element={<AdminRoute element={<AdminOrdersPage/>} />} />
-          <Route path='/admin/order-details/:itemId' element={<AdminRoute element={<AdminOrderDetailsPage/>} />} />
+              <Route path='/admin/orders' element={<AdminRoute element={<AdminOrdersPage/>}/>}/>
+              <Route path='/admin/order-details/:itemId' element={<AdminRoute element={<AdminOrderDetailsPage/>}/>}/>
 
-          
-        </Routes>
-      <Footer/>
-    </CartProvider>
+
+            </Routes>
+          </div>
+          <Footer/>
+        </div>
+      </CartProvider>
     </BrowserRouter>
   );
 }
