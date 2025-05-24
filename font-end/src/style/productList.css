@@ -6,7 +6,12 @@
     padding: 20px;
     margin: 0px 5rem;
 }
-
+.total-price {
+    width: 100%;
+    margin-top: 5px;
+    font-weight: bold;
+    color: #2b9348;
+}
 .product-item {
     border: 1px solid #e0e0e0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);

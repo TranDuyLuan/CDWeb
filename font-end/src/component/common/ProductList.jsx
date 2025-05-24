@@ -39,11 +39,18 @@ const ProductList = ({products}) => {
                             <span>${product.price.toFixed(2)}</span>
                             </Link>
                             {cartItem ? (
-                                <div className="quantity-controls">
-                                    <button onClick={()=> decrementItem(product)}> - </button>
-                                    <span>{cartItem.quantity}</span>
-                                    <button onClick={()=> incrementItem(product)}> + </button>
-                                </div>
+                                <div className="quantity-controls-wrapper">
+                                    <div className="quantity-controls">
+                                        <button onClick={()=> decrementItem(product)}> - </button>
+                                        <span>{cartItem.quantity}</span>
+                                        <button onClick={()=> incrementItem(product)}> + </button>
+                                   
+                                    </div>
+                                 <p className="total-price">
+                                    Total: ${(product.price * cartItem.quantity).toFixed(2)}
+                                 </p>
+                                
+                                </div>   
                             ):(
                                 <button onClick={()=> addToCart(product)}>Add To Cart</button>
                             )}
