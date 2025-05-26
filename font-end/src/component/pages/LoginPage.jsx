@@ -29,8 +29,8 @@ const LoginPage = () => {
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('role', response.role);
                 setTimeout(() => {
-                    navigate("/profile")
-                }, 4000)
+                    navigate("/")
+                }, 1000)
             }
         } catch (error) {
             setMessage(error.response?.data.message || error.message || "unable to Login a user");
