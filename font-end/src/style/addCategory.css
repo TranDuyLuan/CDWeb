@@ -1,31 +1,36 @@
-.add-category-page{
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+/* Layout ngang */
+.product-page-layout {
+    display: flex;
+    gap: 20px;
 }
-.category-form{
+
+/* Sidebar bên trái */
+.sidebar-filter {
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 16px;
+    background-color: #fafafa;
     display: flex;
     flex-direction: column;
+    gap: 12px;
 }
-.category-form h2{
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-.category-form input{
+
+.sidebar-filter input,
+.sidebar-filter select {
     padding: 10px;
-    margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
 }
-.category-form button{
-    background-color: #f68b1e;
-    color: #fff;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 13px 20px;
+
+/* Vùng danh sách sản phẩm */
+.product-area {
+    flex: 1;
 }
-.category-form button:hover{
-    background-color: #c4803c;
+
+/* Tiêu đề danh mục */
+.category-title {
+    font-size: 22px;
+    margin-bottom: 20px;
 }
