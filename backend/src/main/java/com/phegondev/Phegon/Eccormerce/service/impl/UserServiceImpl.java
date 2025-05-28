@@ -37,6 +37,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response registerUser(UserDto registrationRequest) {
+        // Kiểm tra nếu email đã tồn tại trong cơ sở dữ liệu
+        if (userRepo.existsByEmail(registrationRequest.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
         UserRole role = UserRole.USER;
 
         if (registrationRequest.getRole() != null && registrationRequest.getRole().equalsIgnoreCase("admin")) {

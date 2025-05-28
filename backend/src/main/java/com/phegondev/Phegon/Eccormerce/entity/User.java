@@ -2,6 +2,7 @@ package com.phegondev.Phegon.Eccormerce.entity;
 
 import com.phegondev.Phegon.Eccormerce.enums.UserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,7 @@ public class User {
     private String name;
 
     @Column(unique = true)
+    @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
     private String email;
 
