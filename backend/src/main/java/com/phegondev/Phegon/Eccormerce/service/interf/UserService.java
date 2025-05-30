@@ -11,6 +11,6 @@ public interface UserService {
     Response getAllUsers();
     User getLoginUser();
     Response getUserInfoAndOrderHistory();
-    Response loginOrRegisterGoogleUser(String email, String name);
+
 
 }

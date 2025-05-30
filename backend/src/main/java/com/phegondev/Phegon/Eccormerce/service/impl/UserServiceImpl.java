@@ -37,31 +37,6 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Response loginOrRegisterGoogleUser(String email, String name) {
-        Optional<User> optionalUser = userRepo.findByEmail(email);
-
-        User user = optionalUser.orElseGet(() -> {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setName(name);
-            newUser.setPassword(null);
-            newUser.setRole(UserRole.USER);
-            return userRepo.save(newUser);
-        });
-
-        String token = jwtUtils.generateToken(user);
-
-        UserDto userDto = entityDtoMapper.mapUserToDtoBasic(user);
-        return Response.builder()
-                .status(200)
-                .message("Google login success")
-                .token(token)
-                .role(user.getRole().name())
-                .user(userDto)
-                .build();
-    }
-
-    @Override
     public Response registerUser(UserDto registrationRequest) {
         // Kiểm tra nếu email đã tồn tại trong cơ sở dữ liệu
         if (userRepo.existsByEmail(registrationRequest.getEmail())) {

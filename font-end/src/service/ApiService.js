@@ -23,10 +23,6 @@ export default class ApiService {
         const response = await axios.post(`${this.BASE_URL}/auth/login`, loginDetails)
         return response.data;
     }
-    static async loginWithGoogle({ token }) {
-        const response = await axios.post(`${this.BASE_URL}/auth/google`, { token });
-        return response.data;
-    }
 
 
     static async getLoggedInUserInfo() {
@@ -161,6 +157,12 @@ export default class ApiService {
 
 
 
+    // static async createReview(reviewData) {
+    //     const response = await axios.post(`${this.BASE_URL}/review/create`, reviewData, {
+    //         headers: this.getHeader()
+    //     });
+    //     return response.data;
+    // }
 
     /**ADDRESS */
     static async saveAddress(body) {
@@ -187,5 +189,10 @@ export default class ApiService {
     }
 
 
+    /** REVIEW */
+    // static async getReviewsByProductId(productId) {
+    //     const response = await axios.get(`${this.BASE_URL}/review/get-by-product-id/${productId}`);
+    //     return response.data;
+    // }
 
 }

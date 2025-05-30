@@ -28,34 +28,6 @@ import java.util.Map;
 public class AuthController {
 
     private final UserService userService;
-    @PostMapping("/google")
-    public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> request) {
-        String idTokenString = request.get("token");
-        System.out.println("Received Google token: " + request.get("token"));
-        try {
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
-                    GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance())
-                    .setAudience(Collections.singletonList("975530860641-264sfp01t88u8vkhdva2kh19aocdokge.apps.googleusercontent.com"))
-                    .build();
-
-            GoogleIdToken idToken = verifier.verify(idTokenString);
-            if (idToken != null) {
-                GoogleIdToken.Payload payload = idToken.getPayload();
-                String email = payload.getEmail();
-                String name = (String) payload.get("name");
-
-                // Xử lý user trong service
-                Response response = userService.loginOrRegisterGoogleUser(email, name);
-                return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.status(401).body("Invalid ID token");
-            }
-        } catch (Exception e) {
-
-            return ResponseEntity.status(401).body("Google login failed: " + e.getMessage());
-        }
-
-    }
 
     @PostMapping("/register")
     public ResponseEntity<Response> registerUser(@RequestBody UserDto registrationRequest){

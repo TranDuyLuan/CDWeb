@@ -7,41 +7,66 @@ import '../../style/productDetailsPage.css';
 const ProductDetailsPage = () => {
     const { productId } = useParams();
     const navigate = useNavigate();
-    const { cart, dispatch } = useCart();
+    const { dispatch } = useCart();
+
     const [product, setProduct] = useState(null);
     const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const [reviews, setReviews] = useState([]);
+    const [newReview, setNewReview] = useState({ rating: 5, content: "" });
 
     useEffect(() => {
-        fetchProduct();
+        (async () => {
+            await fetchProduct();
+            await fetchReviews();
+        })();
     }, [productId]);
 
     const fetchProduct = async () => {
         try {
-            const response = await ApiService.getProductById(productId);
-            setProduct(response.product);
+            const { product } = await ApiService.getProductById(productId);
+            setProduct(product);
         } catch (error) {
-            console.log(error.message || error);
+            console.error("Lỗi khi tải sản phẩm:", error.message || error);
         }
     };
 
-    const addToCart = () => {
+    const fetchReviews = async () => {
+        try {
+            const { reviews = [] } = await ApiService.getReviewsByProductId(productId);
+            setReviews(reviews);
+        } catch (error) {
+            console.error("Lỗi khi tải đánh giá:", error.message || error);
+        }
+    };
+
+    const handleAddToCart = () => {
         if (product && selectedQuantity > 0) {
-            dispatch({ type: 'ADD_ITEM', payload: { ...product, quantity: selectedQuantity } });
+            dispatch({ type: "ADD_ITEM", payload: { ...product, quantity: selectedQuantity } });
             alert(`Đã thêm ${selectedQuantity} sản phẩm vào giỏ hàng!`);
         }
     };
 
-    const incrementItem = () => {
-        setSelectedQuantity(prev => prev + 1);
+    const changeQuantity = (delta) => {
+        setSelectedQuantity(prev => Math.max(1, prev + delta));
     };
 
-    const decrementItem = () => {
-        setSelectedQuantity(prev => (prev > 1 ? prev - 1 : 1));
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await ApiService.createReview({
+                productId: Number(productId),
+                content: newReview.content,
+                rating: newReview.rating,
+                userId: 1, // Tạm thời, gán cố định
+            });
+            setNewReview({ rating: 5, content: "" });
+            fetchReviews();
+        } catch (error) {
+            console.error("Lỗi khi gửi đánh giá:", error.message || error);
+        }
     };
 
-    if (!product) {
-        return <p>Đang tải thông tin sản phẩm...</p>;
-    }
+    if (!product) return <p>Đang tải thông tin sản phẩm...</p>;
 
     return (
         <div className="product-detail-container">
@@ -62,20 +87,60 @@ const ProductDetailsPage = () => {
 
                     <div className="price-box">
                         <span className="current-price">{product.price.toLocaleString()} đ</span>
-                        {product.originalPrice && product.originalPrice > product.price && (
+                        {product.originalPrice > product.price && (
                             <span className="old-price">{product.originalPrice.toLocaleString()} đ</span>
                         )}
                     </div>
 
-                    {/* Tăng/giảm số lượng muốn mua */}
                     <div className="quantity-controls">
-                        <button onClick={decrementItem}>-</button>
+                        <button onClick={() => changeQuantity(-1)}>-</button>
                         <span>{selectedQuantity}</span>
-                        <button onClick={incrementItem}>+</button>
+                        <button onClick={() => changeQuantity(1)}>+</button>
                     </div>
 
-                    <button onClick={addToCart} className="add-to-cart-btn">Thêm vào giỏ hàng</button>
+                    <button onClick={handleAddToCart} className="add-to-cart-btn">Thêm vào giỏ hàng</button>
                 </div>
+            </div>
+
+            <hr />
+            <div className="review-section">
+                <h2>Đánh giá sản phẩm ({reviews.length})</h2>
+
+                {reviews.length === 0 ? (
+                    <p>Chưa có đánh giá nào.</p>
+                ) : (
+                    <div className="reviews-list">
+                        {reviews.map(({ id, rating, content, created_at }) => (
+                            <div key={id} className="review-item">
+                                <p><strong>⭐ {rating}/5</strong></p>
+                                <p>{content}</p>
+                                <small>Ngày đăng: {new Date(created_at).toLocaleString()}</small>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                <form className="review-form" onSubmit={handleReviewSubmit}>
+                    <h3>Thêm đánh giá của bạn</h3>
+                    <label>
+                        Số sao:
+                        <select
+                            value={newReview.rating}
+                            onChange={(e) => setNewReview(prev => ({ ...prev, rating: parseInt(e.target.value) }))}
+                        >
+                            {[5, 4, 3, 2, 1].map(s => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                    </label>
+                    <label>
+                        Nội dung:
+                        <textarea
+                            value={newReview.content}
+                            onChange={(e) => setNewReview(prev => ({ ...prev, content: e.target.value }))}
+                            required
+                        />
+                    </label>
+                    <button type="submit">Gửi đánh giá</button>
+                </form>
             </div>
         </div>
     );
