@@ -1,81 +1,84 @@
-import React, {useEffect, useState} from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import ApiService from "../../service/ApiService";
 import '../../style/productDetailsPage.css';
 
-
 const ProductDetailsPage = () => {
-
-    const {productId} = useParams();
-    const {cart, dispatch} = useCart();
+    const { productId } = useParams();
+    const navigate = useNavigate();
+    const { cart, dispatch } = useCart();
     const [product, setProduct] = useState(null);
+    const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchProduct();
-    }, [productId])
+    }, [productId]);
 
     const fetchProduct = async () => {
         try {
             const response = await ApiService.getProductById(productId);
             setProduct(response.product);
-            
         } catch (error) {
-            console.log(error.message || error)
+            console.log(error.message || error);
         }
-    }
+    };
 
-    
     const addToCart = () => {
-        if (product) {
-            dispatch({type: 'ADD_ITEM', payload: product});   
+        if (product && selectedQuantity > 0) {
+            dispatch({ type: 'ADD_ITEM', payload: { ...product, quantity: selectedQuantity } });
+            alert(`Đã thêm ${selectedQuantity} sản phẩm vào giỏ hàng!`);
         }
-    }
+    };
 
     const incrementItem = () => {
-        if(product){
-            dispatch({type: 'INCREMENT_ITEM', payload: product});
- 
-        }
-    }
+        setSelectedQuantity(prev => prev + 1);
+    };
 
     const decrementItem = () => {
-        if (product) {
-            const cartItem = cart.find(item => item.id === product.id);
-            if (cartItem && cartItem.quantity > 1) {
-                dispatch({type: 'DECREMENT_ITEM', payload: product}); 
-            }else{
-                dispatch({type: 'REMOVE_ITEM', payload: product}); 
-            }
-            
-        }
-    }
+        setSelectedQuantity(prev => (prev > 1 ? prev - 1 : 1));
+    };
 
     if (!product) {
-        return <p>Loading product details ...</p>
+        return <p>Đang tải thông tin sản phẩm...</p>;
     }
 
-    const cartItem = cart.find(item => item.id === product.id);
+    return (
+        <div className="product-detail-container">
+            <div className="top-bar">
+                <button className="back-button" onClick={() => navigate(-1)}>← Quay lại</button>
+            </div>
 
-    return(
-        <div className="product-detail">
-            <img src={product?.imageUrl} alt={product?.name} />
-            <h1>{product?.name}</h1>
-            <p>{product?.description}</p>
-            <span>${product.price.toFixed(2)}</span>
-            {cartItem ? (
-                <div className="quantity-controls">
-                    <button onClick={decrementItem}>-</button>
-                    <span>{cartItem.quantity}</span>
-                    <button onClick={incrementItem}>+</button>
+            <div className="product-detail">
+                <div className="product-left">
+                    <img src={product.imageUrl} alt={product.name} />
                 </div>
-            ):(
-                <button onClick={addToCart}>Add To Cart</button>
-            )}
 
+                <div className="product-right">
+                    <h1>{product.name}</h1>
+                    <p><strong>Tình trạng:</strong> ✅ Còn hàng</p>
+                    <p><strong>Đánh giá:</strong> ⭐ {product.rating?.toFixed(1) || "Chưa có"} / 5</p>
+                    <p className="description">{product.description}</p>
+
+                    <div className="price-box">
+                        <span className="current-price">{product.price.toLocaleString()} đ</span>
+                        {product.originalPrice && product.originalPrice > product.price && (
+                            <span className="old-price">{product.originalPrice.toLocaleString()} đ</span>
+                        )}
+                    </div>
+
+                    {/* Tăng/giảm số lượng muốn mua */}
+                    <div className="quantity-controls">
+                        <button onClick={decrementItem}>-</button>
+                        <span>{selectedQuantity}</span>
+                        <button onClick={incrementItem}>+</button>
+                    </div>
+
+                    <button onClick={addToCart} className="add-to-cart-btn">Thêm vào giỏ hàng</button>
+                </div>
+            </div>
         </div>
-    )
-
-}
+    );
+};
 
 export default ProductDetailsPage;
