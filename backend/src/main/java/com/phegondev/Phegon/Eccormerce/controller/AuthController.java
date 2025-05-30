@@ -1,9 +1,7 @@
 package com.phegondev.Phegon.Eccormerce.controller;
 
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+
 import com.phegondev.Phegon.Eccormerce.dto.LoginRequest;
 import com.phegondev.Phegon.Eccormerce.dto.Response;
 import com.phegondev.Phegon.Eccormerce.dto.UserDto;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.api.client.json.jackson2.JacksonFactory;
+
 
 
 
