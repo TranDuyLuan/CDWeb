@@ -23,6 +23,10 @@ export default class ApiService {
         const response = await axios.post(`${this.BASE_URL}/auth/login`, loginDetails)
         return response.data;
     }
+    static async loginWithGoogle({ token }) {
+        const response = await axios.post(`${this.BASE_URL}/auth/google`, { token });
+        return response.data;
+    }
 
 
     static async getLoggedInUserInfo() {
