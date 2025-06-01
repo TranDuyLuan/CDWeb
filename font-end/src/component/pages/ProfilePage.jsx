@@ -11,6 +11,7 @@ const ProfilePage = () => {
     const itemsPerPage = 5;
     const navigate = useNavigate();
 
+
     useEffect(() => {
         fetchUserInfo();
     }, []);
@@ -31,6 +32,10 @@ const ProfilePage = () => {
     const handleAddressClick = () => {
         navigate(userInfo.address ? '/edit-address' : '/add-address');
     };
+    const handleChangePassword = () => {
+        navigate('/change-password');
+    };
+
 
     const orderItemList = userInfo.orderItemList || [];
     const totalPages = Math.ceil(orderItemList.length / itemsPerPage);
@@ -52,6 +57,9 @@ const ProfilePage = () => {
                         <p><strong>Họ tên:</strong> {userInfo.name}</p>
                         <p><strong>Email:</strong> {userInfo.email}</p>
                         <p><strong>Số điện thoại:</strong> {userInfo.phoneNumber}</p>
+                        <button className="profile-button" onClick={handleChangePassword}>
+                            Đổi mật khẩu
+                        </button>
                     </div>
 
                     <div className="section address-info">
