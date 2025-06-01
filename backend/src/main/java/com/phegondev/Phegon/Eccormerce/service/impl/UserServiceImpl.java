@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userOpt.get();
-        String newPassword = "123456"; // Bạn có thể random hoặc gửi link token nếu cần
+        String newPassword = "123456";
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);
 
@@ -155,8 +155,9 @@ public class UserServiceImpl implements UserService {
                 user.getEmail(),
                 "Yêu cầu đặt lại mật khẩu",
                 "Mật khẩu tạm thời của bạn là: " + newPassword
+
         );
-        log.info("New password for {}: {}", user.getEmail(), newPassword);
+        //log.info("New password for {}: {}", user.getEmail(), newPassword);
 
         return Response.builder()
                 .status(200)

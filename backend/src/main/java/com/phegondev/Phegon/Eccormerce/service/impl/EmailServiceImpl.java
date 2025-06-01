@@ -18,7 +18,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendSimpleMessage(String to, String subject, String text) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("trangluangknk@gmail.com"); // Email gửi đi (trùng với spring.mail.username)
+            message.setFrom("trangluangknk@gmail.com"); // Email gửi đi
             message.setTo(to);
             message.setSubject(subject);
             message.setText(text);
