@@ -8,6 +8,7 @@ import com.phegondev.Phegon.Eccormerce.exception.NotFoundException;
 import com.phegondev.Phegon.Eccormerce.mapper.EntityDtoMapper;
 import com.phegondev.Phegon.Eccormerce.repository.UserRepo;
 import com.phegondev.Phegon.Eccormerce.security.JwtUtils;
+import com.phegondev.Phegon.Eccormerce.service.interf.EmailService;
 import com.phegondev.Phegon.Eccormerce.service.interf.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final EntityDtoMapper entityDtoMapper;
+    private final EmailService emailService;
+
 
 
     @Override
@@ -123,7 +126,7 @@ public class UserServiceImpl implements UserService {
         User user = getLoginUser();
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException("Current password is incorrect");
+            throw new InvalidCredentialsException("Mật khẩu hiện tại không chính xác");
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -131,7 +134,7 @@ public class UserServiceImpl implements UserService {
 
         return Response.builder()
                 .status(200)
-                .message("Password changed successfully")
+                .message("Mật khẩu đã được thay đổi thành công")
                 .build();
     }
 
@@ -147,7 +150,12 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);
 
-        // TODO: Gửi email thực tế (có thể dùng JavaMailSender nếu muốn)
+        // TODO: Gửi email thực tế
+        emailService.sendSimpleMessage(
+                user.getEmail(),
+                "Yêu cầu đặt lại mật khẩu",
+                "Mật khẩu tạm thời của bạn là: " + newPassword
+        );
         log.info("New password for {}: {}", user.getEmail(), newPassword);
 
         return Response.builder()

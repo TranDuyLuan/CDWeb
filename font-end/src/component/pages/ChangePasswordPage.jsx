@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ApiService from "../../service/ApiService";
+import "../../style/changePassword.css";
+
 
 const ChangePasswordPage = () => {
     const [form, setForm] = useState({ currentPassword: "", newPassword: "" });
@@ -18,16 +20,29 @@ const ChangePasswordPage = () => {
     };
 
     return (
-        <div>
-            <h2>Change Password</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="password" name="currentPassword" placeholder="Current Password" onChange={handleChange} />
-                <input type="password" name="newPassword" placeholder="New Password" onChange={handleChange} />
-                <button type="submit">Change</button>
+        <div className="change-password-container">
+            <h2>Đổi mật khẩu</h2>
+            <form onSubmit={handleSubmit} className="change-password-form">
+                <input
+                    type="password"
+                    name="currentPassword"
+                    placeholder="Mật khẩu hiện tại"
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="password"
+                    name="newPassword"
+                    placeholder="Mật khẩu mới"
+                    onChange={handleChange}
+                    required
+                />
+                <button type="submit">Xác nhận</button>
             </form>
-            {message && <p>{message}</p>}
+            {message && <p className="change-password-message">{message}</p>}
         </div>
     );
+
 };
 
 export default ChangePasswordPage;
