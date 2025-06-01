@@ -2,9 +2,7 @@ package com.phegondev.Phegon.Eccormerce.controller;
 
 
 
-import com.phegondev.Phegon.Eccormerce.dto.LoginRequest;
-import com.phegondev.Phegon.Eccormerce.dto.Response;
-import com.phegondev.Phegon.Eccormerce.dto.UserDto;
+import com.phegondev.Phegon.Eccormerce.dto.*;
 import com.phegondev.Phegon.Eccormerce.service.interf.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +33,14 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Response> loginUser(@RequestBody LoginRequest loginRequest){
         return ResponseEntity.ok(userService.loginUser(loginRequest));
+    }
+    @PostMapping("/change-password")
+    public ResponseEntity<Response> changePassword(@RequestBody ChangePasswordRequest request) {
+        return ResponseEntity.ok(userService.changePassword(request));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Response> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        return ResponseEntity.ok(userService.handleForgotPassword(request));
     }
 }

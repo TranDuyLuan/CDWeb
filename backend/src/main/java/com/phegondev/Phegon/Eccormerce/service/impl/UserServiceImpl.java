@@ -1,8 +1,6 @@
 package com.phegondev.Phegon.Eccormerce.service.impl;
 
-import com.phegondev.Phegon.Eccormerce.dto.LoginRequest;
-import com.phegondev.Phegon.Eccormerce.dto.Response;
-import com.phegondev.Phegon.Eccormerce.dto.UserDto;
+import com.phegondev.Phegon.Eccormerce.dto.*;
 import com.phegondev.Phegon.Eccormerce.entity.User;
 import com.phegondev.Phegon.Eccormerce.enums.UserRole;
 import com.phegondev.Phegon.Eccormerce.exception.InvalidCredentialsException;
@@ -120,4 +118,42 @@ public class UserServiceImpl implements UserService {
                 .user(userDto)
                 .build();
     }
+    @Override
+    public Response changePassword(ChangePasswordRequest request) {
+        User user = getLoginUser();
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException("Current password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepo.save(user);
+
+        return Response.builder()
+                .status(200)
+                .message("Password changed successfully")
+                .build();
+    }
+
+    @Override
+    public Response handleForgotPassword(ForgotPasswordRequest request) {
+        Optional<User> userOpt = userRepo.findByEmail(request.getEmail());
+        if (userOpt.isEmpty()) {
+            throw new NotFoundException("Email not found");
+        }
+
+        User user = userOpt.get();
+        String newPassword = "123456"; // Bạn có thể random hoặc gửi link token nếu cần
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepo.save(user);
+
+        // TODO: Gửi email thực tế (có thể dùng JavaMailSender nếu muốn)
+        log.info("New password for {}: {}", user.getEmail(), newPassword);
+
+        return Response.builder()
+                .status(200)
+                .message("New password sent to your email")
+                .build();
+    }
+
 }

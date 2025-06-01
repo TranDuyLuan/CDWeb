@@ -195,4 +195,15 @@ export default class ApiService {
     //     return response.data;
     // }
 
+    static async changePassword(body) {
+        const response = await axios.post(`${this.BASE_URL}/auth/change-password`, body, {
+            headers: this.getHeader()
+        });
+        return response.data;
+    }
+
+    static async forgotPassword(body) {
+        const response = await axios.post(`${this.BASE_URL}/auth/forgot-password`, body);
+        return response.data;
+    }
 }
