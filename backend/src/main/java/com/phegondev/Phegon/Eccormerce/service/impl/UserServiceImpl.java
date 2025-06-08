@@ -164,5 +164,27 @@ public class UserServiceImpl implements UserService {
                 .message("New password sent to your email")
                 .build();
     }
+    @Override
+    public Response updateUserProfile(UpdateUserProfileRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        user.setName(request.getName());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setEmail(request.getEmail()); // Nếu cho phép đổi email
+
+        userRepo.save(user);
+
+        return Response.builder()
+                .status(200)
+                .message("Cập nhật thông tin thành công")
+                .user(entityDtoMapper.mapUserToDtoBasic(user))
+                .build();
+
+    }
+
+
 
 }

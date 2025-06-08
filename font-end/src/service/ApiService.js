@@ -206,4 +206,11 @@ export default class ApiService {
         const response = await axios.post(`${this.BASE_URL}/auth/forgot-password`, body);
         return response.data;
     }
+    static async updateUserInfo(body) {
+        const response = await axios.put(`${this.BASE_URL}/user/update-profile`, body, {
+            headers: this.getHeader()
+        });
+        return response.data;
+    }
+
 }

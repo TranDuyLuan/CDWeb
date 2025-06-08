@@ -11,6 +11,7 @@ public interface UserService {
     Response getUserInfoAndOrderHistory();
     Response changePassword(ChangePasswordRequest request);
     Response handleForgotPassword(ForgotPasswordRequest request);
+    Response updateUserProfile(UpdateUserProfileRequest request);
 
 
 }
