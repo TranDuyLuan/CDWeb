@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import ApiService from "../../service/ApiService";
 import '../../style/register.css';
@@ -10,25 +10,10 @@ const LoginPage = () => {
     const [forgotEmail, setForgotEmail] = useState("");
     const navigate = useNavigate();
 
-    useEffect(() => {
-        /* global google */
-        if (window.google) {
-            google.accounts.id.initialize({
-                client_id: "975530860641-264sfp01t88u8vkhdva2kh19aocdokge.apps.googleusercontent.com", // thay bằng client ID của bạn
-                callback: handleGoogleResponse
-            });
-            google.accounts.id.renderButton(
-                document.getElementById("google-login-btn"),
-                { theme: "outline", size: "large" }
-            );
-        }
-    }, []);
-
-    const handleGoogleResponse = async (response) => {
+    const handleGoogleResponse = useCallback(async (response) => {
         const idToken = response.credential;
         try {
-            // Gửi token này lên backend để xác minh và lấy JWT (tùy backend)
-            const res = await ApiService.loginUserWithGoogle(idToken); // bạn cần viết hàm này
+            const res = await ApiService.loginUserWithGoogle(idToken);
             localStorage.setItem('token', res.token);
             localStorage.setItem('role', res.role);
             setMessage("Login thành công với Google");
@@ -36,7 +21,20 @@ const LoginPage = () => {
         } catch (error) {
             setMessage("Đăng nhập Google thất bại");
         }
-    };
+    }, [navigate]);
+
+    useEffect(() => {
+        if (window.google) {
+            window.google.accounts.id.initialize({
+                client_id: "975530860641-264sfp01t88u8vkhdva2kh19aocdokge.apps.googleusercontent.com",
+                callback: handleGoogleResponse
+            });
+            window.google.accounts.id.renderButton(
+                document.getElementById("google-login-btn"),
+                { theme: "outline", size: "large" }
+            );
+        }
+    }, [handleGoogleResponse]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -97,7 +95,13 @@ const LoginPage = () => {
                     <div id="google-login-btn" style={{ marginTop: "20px" }}></div>
 
                     <p className="register-link">
-                        <a href="#" onClick={() => setShowForgotPassword(true)}>Forgot Password?</a>
+                        <button
+                            type="button"
+                            className="link-button"
+                            onClick={() => setShowForgotPassword(true)}
+                        >
+                            Forgot Password?
+                        </button>
                     </p>
                     <p className="register-link">
                         Don't have an account? <a href="/register">Register</a>
@@ -114,7 +118,13 @@ const LoginPage = () => {
                     />
                     <button onClick={handleForgotPassword}>Send Reset Email</button>
                     <p>
-                        <a href="#" onClick={() => setShowForgotPassword(false)}>Back to Login</a>
+                        <button
+                            type="button"
+                            className="link-button"
+                            onClick={() => setShowForgotPassword(false)}
+                        >
+                            Back to Login
+                        </button>
                     </p>
                 </div>
             )}
