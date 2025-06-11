@@ -1,5 +1,8 @@
 package com.phegondev.Phegon.Eccormerce.service.impl;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.phegondev.Phegon.Eccormerce.dto.*;
 import com.phegondev.Phegon.Eccormerce.entity.User;
 import com.phegondev.Phegon.Eccormerce.enums.UserRole;
@@ -17,7 +20,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -184,6 +190,48 @@ public class UserServiceImpl implements UserService {
                 .build();
 
     }
+    @Override
+    public Response loginWithGoogle(String idTokenString) {
+        try {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                    new NetHttpTransport(),
+                    JacksonFactory.getDefaultInstance())
+                    .setAudience(Collections.singletonList("975530860641-264sfp01t88u8vkhdva2kh19aocdokge.apps.googleusercontent.com"))
+                    .build();
+
+            GoogleIdToken idToken = verifier.verify(idTokenString);
+            if (idToken == null) {
+                throw new RuntimeException("ID Token không hợp lệ");
+            }
+
+            GoogleIdToken.Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
+            String name = (String) payload.get("name");
+
+            User user = userRepo.findByEmail(email).orElseGet(() -> {
+                User newUser = User.builder()
+                        .email(email)
+                        .name(name)
+                        .role(UserRole.USER)
+                        .password(passwordEncoder.encode("google_login_dummy_password"))
+                        .build();
+                return userRepo.save(newUser);
+            });
+
+            String jwtToken = jwtUtils.generateToken(user);
+
+            return Response.builder()
+                    .status(200)
+                    .message("Google login thành công")
+                    .token(jwtToken)
+                    .role(user.getRole().name())
+                    .build();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Google login thất bại: " + e.getMessage());
+        }
+    }
+
 
 
 

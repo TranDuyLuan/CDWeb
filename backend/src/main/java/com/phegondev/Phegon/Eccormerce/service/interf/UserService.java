@@ -12,6 +12,7 @@ public interface UserService {
     Response changePassword(ChangePasswordRequest request);
     Response handleForgotPassword(ForgotPasswordRequest request);
     Response updateUserProfile(UpdateUserProfileRequest request);
+    Response loginWithGoogle(String idToken);
 
 
 }

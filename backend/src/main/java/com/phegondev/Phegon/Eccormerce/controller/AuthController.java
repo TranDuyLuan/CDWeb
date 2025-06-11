@@ -43,4 +43,10 @@ public class AuthController {
     public ResponseEntity<Response> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         return ResponseEntity.ok(userService.handleForgotPassword(request));
     }
+    @PostMapping("/google")
+    public ResponseEntity<Response> loginWithGoogle(@RequestBody Map<String, String> payload) {
+        String idToken = payload.get("idToken");
+        return ResponseEntity.ok(userService.loginWithGoogle(idToken));
+    }
+
 }
