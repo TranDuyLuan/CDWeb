@@ -10,6 +10,7 @@ const LoginPage = () => {
     const [forgotEmail, setForgotEmail] = useState("");
     const navigate = useNavigate();
 
+    // Xử lý login với Google
     const handleGoogleResponse = useCallback(async (response) => {
         const idToken = response.credential;
         try {
@@ -23,7 +24,34 @@ const LoginPage = () => {
         }
     }, [navigate]);
 
+    // Xử lý login với Facebook
+    const handleFacebookLogin = () => {
+        window.FB.login(response => {
+            if (response.authResponse) {
+                const accessToken = response.authResponse.accessToken;
+                loginWithFacebook(accessToken);
+            } else {
+                setMessage("Facebook login failed");
+            }
+        }, { scope: 'public_profile,email' });
+    };
+
+    const loginWithFacebook = async (accessToken) => {
+        console.log("Gửi accessToken:", accessToken); // ✅ kiểm tra token
+        try {
+            const response = await ApiService.loginUserWithFacebook(accessToken);
+            localStorage.setItem("token", response.token);
+            localStorage.setItem("role", response.role);
+            setMessage("Login thành công với Facebook");
+            setTimeout(() => navigate("/"), 1000);
+        } catch (err) {
+            console.error("Lỗi Facebook login:", err);
+            setMessage("Login Facebook thất bại");
+        }
+    };
+
     useEffect(() => {
+        // Google SDK
         if (window.google) {
             window.google.accounts.id.initialize({
                 client_id: "975530860641-264sfp01t88u8vkhdva2kh19aocdokge.apps.googleusercontent.com",
@@ -34,6 +62,22 @@ const LoginPage = () => {
                 { theme: "outline", size: "large" }
             );
         }
+
+        // Facebook SDK init
+        // Facebook SDK — đợi load xong rồi mới init
+        const fbInitInterval = setInterval(() => {
+            if (window.FB && typeof window.FB.init === 'function') {
+                clearInterval(fbInitInterval);
+                window.FB.init({
+                    appId: '1043108134585670',
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v17.0' //
+                });
+            }
+        }, 100);
+
+        return () => clearInterval(fbInitInterval);;
     }, [handleGoogleResponse]);
 
     const handleChange = (e) => {
@@ -92,7 +136,16 @@ const LoginPage = () => {
                     />
                     <button type="submit">Login</button>
 
-                    <div id="google-login-btn" style={{ marginTop: "20px" }}></div>
+                    <div style={{ marginTop: "20px" }}>
+                        <div id="google-login-btn"></div>
+                        <button
+                            type="button"
+                            onClick={handleFacebookLogin}
+                            style={{ marginTop: "10px" }}
+                        >
+                            Login with Facebook
+                        </button>
+                    </div>
 
                     <p className="register-link">
                         <button

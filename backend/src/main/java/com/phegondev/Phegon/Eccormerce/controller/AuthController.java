@@ -48,5 +48,11 @@ public class AuthController {
         String idToken = payload.get("idToken");
         return ResponseEntity.ok(userService.loginWithGoogle(idToken));
     }
+    @PostMapping("/facebook")
+    public ResponseEntity<Response> loginWithFacebook(@RequestBody Map<String, String> payload) {
+        String accessToken = payload.get("accessToken");
+        return ResponseEntity.ok(userService.loginWithFacebook(accessToken));
+    }
+
 
 }

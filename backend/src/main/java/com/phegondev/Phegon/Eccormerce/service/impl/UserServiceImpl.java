@@ -21,10 +21,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import org.springframework.web.client.RestTemplate;
 
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -231,6 +233,58 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Google login thất bại: " + e.getMessage());
         }
     }
+
+    @Override
+    public Response loginWithFacebook(String accessToken) {
+        try {
+            String url = "https://graph.facebook.com/me?fields=id,name,email&access_token=" + accessToken;
+
+            RestTemplate restTemplate = new RestTemplate();
+            Map<String, Object> fbUser = restTemplate.getForObject(url, Map.class);
+
+            // ✅ In log để kiểm tra dữ liệu trả về
+            System.out.println("== Facebook user response ==");
+            System.out.println(fbUser);
+
+            if (fbUser == null) {
+                throw new RuntimeException("Không nhận được phản hồi từ Facebook.");
+            }
+
+            String email = (String) fbUser.get("email");
+            String name = (String) fbUser.get("name");
+
+            if (email == null || email.isEmpty()) {
+                throw new RuntimeException("Không lấy được email từ Facebook. Có thể người dùng chưa cấp quyền email.");
+            }
+
+            User user = userRepo.findByEmail(email).orElseGet(() -> {
+                User newUser = User.builder()
+                        .email(email)
+                        .name(name != null ? name : "Facebook User")
+                        .phoneNumber("+84")
+                        .role(UserRole.USER)
+                        .password(passwordEncoder.encode("facebook_login"))
+                        .build();
+                return userRepo.save(newUser);
+            });
+
+            String jwtToken = jwtUtils.generateToken(user);
+
+            return Response.builder()
+                    .status(200)
+                    .message("Login Facebook thành công")
+                    .token(jwtToken)
+                    .role(user.getRole().name())
+                    .build();
+        } catch (Exception e) {
+            // ✅ Log lỗi rõ ràng
+            e.printStackTrace();
+            throw new RuntimeException("Facebook login thất bại: " + e.getMessage());
+        }
+    }
+
+
+
 
 
 

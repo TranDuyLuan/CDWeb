@@ -216,6 +216,10 @@ export default class ApiService {
         const response = await axios.post(`${this.BASE_URL}/auth/google`, { idToken });
         return response.data;
     }
+    static async loginUserWithFacebook(accessToken) {
+        const response = await axios.post(`${this.BASE_URL}/auth/facebook`, { accessToken });
+        return response.data;
+    }
 
 
 }

@@ -13,6 +13,8 @@ public interface UserService {
     Response handleForgotPassword(ForgotPasswordRequest request);
     Response updateUserProfile(UpdateUserProfileRequest request);
     Response loginWithGoogle(String idToken);
+    Response loginWithFacebook(String accessToken);
+
 
 
 }
