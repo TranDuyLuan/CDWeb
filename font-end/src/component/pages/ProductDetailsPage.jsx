@@ -82,6 +82,7 @@ const ProductDetailsPage = () => {
                 <div className="product-right">
                     <h1>{product.name}</h1>
                     <p><strong>Tình trạng:</strong> ✅ Còn hàng</p>
+                    <p><strong>Size:</strong> {product.size?.name || "Chưa xác định"}</p>
                     <p><strong>Đánh giá:</strong> ⭐ {product.rating?.toFixed(1) || "Chưa có"} / 5</p>
                     <p className="description">{product.description}</p>
 
@@ -102,7 +103,7 @@ const ProductDetailsPage = () => {
                 </div>
             </div>
 
-            <hr />
+            <hr/>
             <div className="review-section">
                 <h2>Đánh giá sản phẩm ({reviews.length})</h2>
 

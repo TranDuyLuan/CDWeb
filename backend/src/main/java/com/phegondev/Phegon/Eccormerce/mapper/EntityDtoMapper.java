@@ -63,6 +63,7 @@ public class EntityDtoMapper {
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
         productDto.setImageUrl(product.getImageUrl());
+        productDto.setSize(mapSizeToDto(product.getSize()));
         return productDto;
     }
 
@@ -117,6 +118,15 @@ public class EntityDtoMapper {
         return userDto;
 
     }
+    public SizeDto mapSizeToDto(Size size) {
+        if (size == null) return null;
+
+        SizeDto sizeDto = new SizeDto();
+        sizeDto.setId(size.getId());
+        sizeDto.setName(size.getName());
+        return sizeDto;
+    }
+
 
 
 

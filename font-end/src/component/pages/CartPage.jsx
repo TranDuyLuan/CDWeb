@@ -13,27 +13,27 @@ const CartPage = () => {
     const incrementItem = (product) => {
         dispatch({ type: 'INCREMENT_ITEM', payload: product });
     };
-const decrementItem = (product) => {
-    const cartItem = cart.find(item => item.id === product.id);
-    if (cartItem && cartItem.quantity > 1) {
-        dispatch({ type: 'DECREMENT_ITEM', payload: product });
-    } else {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to remove this item from your cart?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, remove it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                dispatch({ type: 'REMOVE_ITEM', payload: product });
-            }
-        });
-    }
-};
 
+    const decrementItem = (product) => {
+        const cartItem = cart.find(item => item.id === product.id && item.size === product.size);
+        if (cartItem && cartItem.quantity > 1) {
+            dispatch({ type: 'DECREMENT_ITEM', payload: product });
+        } else {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to remove this item from your cart?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, remove it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch({ type: 'REMOVE_ITEM', payload: product });
+                }
+            });
+        }
+    };
 
     const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -49,7 +49,8 @@ const decrementItem = (product) => {
 
         const orderItems = cart.map(item => ({
             productId: item.id,
-            quantity: item.quantity
+            quantity: item.quantity,
+            size: item.size // <-- thêm size vào đơn hàng nếu muốn
         }));
 
         const orderRequest = {
@@ -84,11 +85,12 @@ const decrementItem = (product) => {
                 <div className="cart-container">
                     <ul className="cart-items">
                         {cart.map(item => (
-                            <li key={item.id} className="cart-item">
+                            <li key={`${item.id}-${item.size}`} className="cart-item">
                                 <img src={item.imageUrl} alt={item.name} className="cart-item-img" />
                                 <div className="cart-item-info">
                                     <h3>{item.name}</h3>
                                     <p>{item.description}</p>
+                                    <p><strong>Size:</strong> {item.size}</p>  {/* size  */}
                                     <div className="quantity-controls">
                                         <button onClick={() => decrementItem(item)}>-</button>
                                         <span>{item.quantity}</span>

@@ -26,12 +26,13 @@ public class ProductController {
             @RequestParam String imageUrl,
             @RequestParam String name,
             @RequestParam String description,
-            @RequestParam BigDecimal price
+            @RequestParam BigDecimal price,
+            @RequestParam String sizeName
     ) {
-        if (categoryId == null || imageUrl.isBlank() || name.isBlank() || description.isBlank() || price == null) {
+        if (categoryId == null || imageUrl.isBlank() || name.isBlank() || description.isBlank() || price == null || sizeName.isBlank()) {
             throw new InvalidCredentialsException("All Fields are Required");
         }
-        return ResponseEntity.ok(productService.createProduct(categoryId, imageUrl, name, description, price));
+        return ResponseEntity.ok(productService.createProduct(categoryId, imageUrl, name, description, price, sizeName));
     }
 
     @PutMapping("/update")
@@ -42,9 +43,10 @@ public class ProductController {
             @RequestParam(required = false) String imageUrl,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String description,
-            @RequestParam(required = false) BigDecimal price
+            @RequestParam(required = false) BigDecimal price,
+            @RequestParam(required = false) String sizeName
     ) {
-        return ResponseEntity.ok(productService.updateProduct(productId, categoryId, imageUrl, name, description, price));
+        return ResponseEntity.ok(productService.updateProduct(productId, categoryId, imageUrl, name, description, price, sizeName));
     }
 
     @DeleteMapping("/delete/{productId}")
