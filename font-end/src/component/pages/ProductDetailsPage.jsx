@@ -11,8 +11,12 @@ const ProductDetailsPage = () => {
 
     const [product, setProduct] = useState(null);
     const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const [selectedSize, setSelectedSize] = useState("");  // Thêm state lưu size
     const [reviews, setReviews] = useState([]);
     const [newReview, setNewReview] = useState({ rating: 5, content: "" });
+
+    // Giả sử size cố định trước
+    const availableSizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
     useEffect(() => {
         (async () => {
@@ -25,6 +29,7 @@ const ProductDetailsPage = () => {
         try {
             const { product } = await ApiService.getProductById(productId);
             setProduct(product);
+            setSelectedSize(product.size?.name || "");  // Gán size mặc định nếu có
         } catch (error) {
             console.error("Lỗi khi tải sản phẩm:", error.message || error);
         }
@@ -40,9 +45,17 @@ const ProductDetailsPage = () => {
     };
 
     const handleAddToCart = () => {
+        if (!selectedSize) {
+            alert("Vui lòng chọn size trước khi thêm vào giỏ hàng.");
+            return;
+        }
+
         if (product && selectedQuantity > 0) {
-            dispatch({ type: "ADD_ITEM", payload: { ...product, quantity: selectedQuantity } });
-            alert(`Đã thêm ${selectedQuantity} sản phẩm vào giỏ hàng!`);
+            dispatch({
+                type: "ADD_ITEM",
+                payload: { ...product, quantity: selectedQuantity, size: selectedSize }
+            });
+            alert(`Đã thêm ${selectedQuantity} sản phẩm size ${selectedSize} vào giỏ hàng!`);
         }
     };
 
@@ -82,9 +95,24 @@ const ProductDetailsPage = () => {
                 <div className="product-right">
                     <h1>{product.name}</h1>
                     <p><strong>Tình trạng:</strong> ✅ Còn hàng</p>
-                    <p><strong>Size:</strong> {product.size?.name || "Chưa xác định"}</p>
                     <p><strong>Đánh giá:</strong> ⭐ {product.rating?.toFixed(1) || "Chưa có"} / 5</p>
                     <p className="description">{product.description}</p>
+
+                    <div className="size-selection">
+                        <strong>Chọn size:</strong>
+                        <div className="size-options">
+                            {availableSizes.map(size => (
+                                <button
+                                    key={size}
+                                    className={`size-button ${selectedSize === size ? 'active' : ''}`}
+                                    onClick={() => setSelectedSize(size)}
+                                >
+                                    {size}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
 
                     <div className="price-box">
                         <span className="current-price">{product.price.toLocaleString()} đ</span>
@@ -111,7 +139,7 @@ const ProductDetailsPage = () => {
                     <p>Chưa có đánh giá nào.</p>
                 ) : (
                     <div className="reviews-list">
-                        {reviews.map(({ id, rating, content, created_at }) => (
+                        {reviews.map(({id, rating, content, created_at}) => (
                             <div key={id} className="review-item">
                                 <p><strong>⭐ {rating}/5</strong></p>
                                 <p>{content}</p>

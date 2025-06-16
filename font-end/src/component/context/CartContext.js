@@ -11,55 +11,58 @@ const cartReducer = (state, action) => {
 
     switch (action.type) {
         case 'ADD_ITEM': {
-            const existingItem = state.cart.find(item => item.id === action.payload.id);
+            const existingItem = state.cart.find(item =>
+                item.id === action.payload.id && item.size === action.payload.size
+            );
+
             if (existingItem) {
                 newCart = state.cart.map(item =>
-                    item.id === action.payload.id
+                    item.id === action.payload.id && item.size === action.payload.size
                         ? { ...item, quantity: item.quantity + action.payload.quantity }
                         : item
                 );
             } else {
                 newCart = [...state.cart, { ...action.payload }];
             }
+
             return { ...state, cart: newCart };
         }
 
         case 'REMOVE_ITEM': {
-            newCart = state.cart.filter(item => item.id !== action.payload.id);
+            newCart = state.cart.filter(item =>
+                !(item.id === action.payload.id && item.size === action.payload.size)
+            );
             return { ...state, cart: newCart };
         }
 
         case 'INCREMENT_ITEM': {
-            const existingItem = state.cart.find(item => item.id === action.payload.id);
-            if (existingItem) {
-                newCart = state.cart.map(item =>
-                    item.id === action.payload.id
-                        ? { ...item, quantity: item.quantity + 1 }
-                        : item
-                );
-            } else {
-                newCart = [...state.cart, { ...action.payload, quantity: 1 }];
-            }
-            return { ...state, cart: newCart };
-        }
-
-        case 'DECREMENT_ITEM': {
             newCart = state.cart.map(item =>
-                item.id === action.payload.id && item.quantity > 1
-                    ? { ...item, quantity: item.quantity - 1 }
+                item.id === action.payload.id && item.size === action.payload.size
+                    ? { ...item, quantity: item.quantity + 1 }
                     : item
             );
             return { ...state, cart: newCart };
         }
 
-        case 'CLEAR_CART': {
-            return { ...state, cart: [] };
+        case 'DECREMENT_ITEM': {
+            newCart = state.cart
+                .map(item =>
+                    item.id === action.payload.id && item.size === action.payload.size
+                        ? { ...item, quantity: item.quantity - 1 }
+                        : item
+                )
+                .filter(item => item.quantity > 0);
+            return { ...state, cart: newCart };
         }
+
+        case 'CLEAR_CART':
+            return { ...state, cart: [] };
 
         default:
             return state;
     }
 };
+
 
 export const CartProvider = ({ children }) => {
     const [state, dispatch] = useReducer(cartReducer, initialState);

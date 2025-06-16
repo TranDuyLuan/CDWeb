@@ -208,3 +208,42 @@
 .review-form button:hover {
     background-color: #8b4c0d;
 }
+.size-selection {
+    margin: 20px 0;
+}
+
+.size-options {
+    display: flex;
+    gap: 10px;
+}
+
+.size-button {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #999;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.size-button:hover {
+    border-color: #aaa;
+}
+
+.size-button.active {
+    border: 2px solid #d40000;
+    color: #d40000;
+}
+
+.size-button.active::after {
+    content: '✔';
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    font-size: 12px;
+    color: #d40000;
+}
