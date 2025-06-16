@@ -37,7 +37,7 @@ const LoginPage = () => {
     };
 
     const loginWithFacebook = async (accessToken) => {
-        console.log("Gửi accessToken:", accessToken); // ✅ kiểm tra token
+       // console.log("Gửi accessToken:", accessToken); //  kiểm tra token
         try {
             const response = await ApiService.loginUserWithFacebook(accessToken);
             localStorage.setItem("token", response.token);
