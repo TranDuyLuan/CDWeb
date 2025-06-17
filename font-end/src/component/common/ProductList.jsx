@@ -65,7 +65,7 @@ const ProductList = ({ products }) => {
                             <h3>{product.name}</h3>
                             <p>{product.description}</p>
                             <p className="default-size">Size: {size}</p>
-                            <span>${product.price.toFixed(2)}</span>
+                            <span>{product.price.toFixed(2)} đ</span>
                         </Link>
 
                         {cartItem ? (
