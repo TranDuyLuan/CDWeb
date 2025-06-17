@@ -24,10 +24,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import org.springframework.web.client.RestTemplate;
 
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -148,30 +145,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response handleForgotPassword(ForgotPasswordRequest request) {
-        Optional<User> userOpt = userRepo.findByEmail(request.getEmail());
-        if (userOpt.isEmpty()) {
-            throw new NotFoundException("Email not found");
-        }
+        User user = userRepo.findByEmail(request.getEmail())
+                .orElseThrow(() -> new NotFoundException("Email not found"));
 
-        User user = userOpt.get();
-        String newPassword = "123456";
+        String newPassword = generateStrongPassword(10);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);
 
-        // TODO: Gửi email thực tế
         emailService.sendSimpleMessage(
                 user.getEmail(),
                 "Yêu cầu đặt lại mật khẩu",
                 "Mật khẩu tạm thời của bạn là: " + newPassword
-
         );
-        //log.info("New password for {}: {}", user.getEmail(), newPassword);
 
         return Response.builder()
                 .status(200)
                 .message("New password sent to your email")
                 .build();
     }
+
     @Override
     public Response updateUserProfile(UpdateUserProfileRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -282,6 +274,33 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Facebook login thất bại: " + e.getMessage());
         }
 
+    }
+    private String generateStrongPassword(int length) {
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String digits = "0123456789";
+        String symbols = "!@#$%^&*";
+        String all = lower + upper + digits + symbols;
+
+        Random random = new Random();
+        StringBuilder password = new StringBuilder();
+
+        password.append(lower.charAt(random.nextInt(lower.length())));
+        password.append(upper.charAt(random.nextInt(upper.length())));
+        password.append(digits.charAt(random.nextInt(digits.length())));
+        password.append(symbols.charAt(random.nextInt(symbols.length())));
+
+        for (int i = 4; i < length; i++) {
+            password.append(all.charAt(random.nextInt(all.length())));
+        }
+
+        List<Character> chars = password.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
+        Collections.shuffle(chars);
+
+        StringBuilder shuffled = new StringBuilder();
+        chars.forEach(shuffled::append);
+
+        return shuffled.toString();
     }
 
 
