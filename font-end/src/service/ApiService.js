@@ -157,6 +157,12 @@ export default class ApiService {
 
 
 
+    // static async createReview(reviewData) {
+    //     const response = await axios.post(`${this.BASE_URL}/review/create`, reviewData, {
+    //         headers: this.getHeader()
+    //     });
+    //     return response.data;
+    // }
 
     /**ADDRESS */
     static async saveAddress(body) {
@@ -182,6 +188,38 @@ export default class ApiService {
         return role === 'ADMIN'
     }
 
+
+    /** REVIEW */
+    // static async getReviewsByProductId(productId) {
+    //     const response = await axios.get(`${this.BASE_URL}/review/get-by-product-id/${productId}`);
+    //     return response.data;
+    // }
+
+    static async changePassword(body) {
+        const response = await axios.post(`${this.BASE_URL}/auth/change-password`, body, {
+            headers: this.getHeader()
+        });
+        return response.data;
+    }
+
+    static async forgotPassword(body) {
+        const response = await axios.post(`${this.BASE_URL}/auth/forgot-password`, body);
+        return response.data;
+    }
+    static async updateUserInfo(body) {
+        const response = await axios.put(`${this.BASE_URL}/user/update-profile`, body, {
+            headers: this.getHeader()
+        });
+        return response.data;
+    }
+    static async loginUserWithGoogle(idToken) {
+        const response = await axios.post(`${this.BASE_URL}/auth/google`, { idToken });
+        return response.data;
+    }
+    static async loginUserWithFacebook(accessToken) {
+        const response = await axios.post(`${this.BASE_URL}/auth/facebook`, { accessToken });
+        return response.data;
+    }
 
 
 }

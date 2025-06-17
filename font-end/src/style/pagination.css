@@ -22,3 +22,32 @@
 .pagination button:hover{
     background-color: #874f17;
 }
+/* Phần nhập trang muốn đến */
+.goto-page {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.goto-page input {
+    width: 60px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+    font-size: 1rem;
+}
+
+.goto-page button {
+    background-color: #555;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.goto-page button:hover {
+    background-color: #874f17;
+}
