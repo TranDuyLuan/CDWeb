@@ -206,6 +206,7 @@ public class UserServiceImpl implements UserService {
                 User newUser = User.builder()
                         .email(email)
                         .name(name)
+                        .phoneNumber("+84")
                         .role(UserRole.USER)
                         .password(passwordEncoder.encode("google_login_dummy_password"))
                         .build();
