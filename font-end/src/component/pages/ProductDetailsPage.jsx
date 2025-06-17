@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import ApiService from "../../service/ApiService";
@@ -15,34 +15,37 @@ const ProductDetailsPage = () => {
     const [reviews, setReviews] = useState([]);
     const [newReview, setNewReview] = useState({ rating: 5, content: "" });
 
-    // Giả sử size cố định trước
+    // Giả sử size
     const availableSizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
-    useEffect(() => {
-        (async () => {
-            await fetchProduct();
-            await fetchReviews();
-        })();
-    }, [productId]);
-
-    const fetchProduct = async () => {
+    const fetchProduct = useCallback(async () => {
         try {
             const { product } = await ApiService.getProductById(productId);
             setProduct(product);
-            setSelectedSize(product.size?.name || "");  // Gán size mặc định nếu có
+            setSelectedSize(product.size?.name || "");
         } catch (error) {
             console.error("Lỗi khi tải sản phẩm:", error.message || error);
         }
-    };
+    }, [productId]);
 
-    const fetchReviews = async () => {
+    const fetchReviews = useCallback(async () => {
         try {
             const { reviews = [] } = await ApiService.getReviewsByProductId(productId);
             setReviews(reviews);
         } catch (error) {
             console.error("Lỗi khi tải đánh giá:", error.message || error);
         }
-    };
+    }, [productId]);
+
+    useEffect(() => {
+        fetchProduct();
+        fetchReviews();
+    }, [fetchProduct, fetchReviews]);
+
+
+
+
+
 
     const handleAddToCart = () => {
         if (!selectedSize) {
