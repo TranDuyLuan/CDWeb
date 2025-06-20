@@ -13,7 +13,8 @@ const AddProductPage = () => {
     const [description, setDescription] = useState('');
     const [message, setMessage] = useState('');
     const [price, setPrice] = useState('');
-
+    const [previewUrl, setPreviewUrl] = useState('');
+    const [sizeName, setSizeName] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -21,9 +22,18 @@ const AddProductPage = () => {
     }, [])
 
     const handleImage = (e) => {
-        setImage(e.target.files[0])
-    }
-    const [sizeName, setSizeName] = useState('');
+        const file = e.target.files[0];
+        setImage(file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+
 
 
     const handleSubmit = async (e) => {
@@ -60,6 +70,15 @@ const AddProductPage = () => {
                 <h2>Add Product</h2>
                 {message && <div className="message">{message}</div>}
                 <input type="file" onChange={handleImage}/>
+                {previewUrl && (
+                    <div style={{ marginTop: '10px' }}>
+                        <img
+                            src={previewUrl}
+                            alt="Preview"
+                            style={{ maxWidth: '200px', border: '1px solid #ccc', borderRadius: '5px' }}
+                        />
+                    </div>
+                )}
                 <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
                     <option value="">Select Category</option>
                     {categories.map((cat) => (
