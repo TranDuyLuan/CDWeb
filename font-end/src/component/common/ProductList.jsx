@@ -65,7 +65,7 @@ const ProductList = ({ products }) => {
                             <h3>{product.name}</h3>
                             <p>{product.description}</p>
                             <p className="default-size">Size: {size}</p>
-                            <span>{product.price.toFixed(2)} đ</span>
+                            <span>{product.price.toLocaleString('vi-VN')} đ</span>
                         </Link>
 
                         {cartItem ? (
@@ -76,7 +76,7 @@ const ProductList = ({ products }) => {
                                     <button onClick={() => incrementItem(product)}>+</button>
                                 </div>
                                 <p className="total-price">
-                                    Total: ${(product.price * cartItem.quantity).toFixed(2)}
+                                    Total: ${(product.price * cartItem.quantity).toLocaleString('vi-VN')}
                                 </p>
                             </div>
                         ) : (

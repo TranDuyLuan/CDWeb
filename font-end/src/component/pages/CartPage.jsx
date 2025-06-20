@@ -96,13 +96,13 @@ const CartPage = () => {
                                         <span>{item.quantity}</span>
                                         <button onClick={() => incrementItem(item)}>+</button>
                                     </div>
-                                    <p className="item-total">Item Total: ${(item.price * item.quantity).toFixed(2)}</p>
+                                    <p className="item-total">Item Total: {(item.price * item.quantity).toLocaleString('vi-VN')}đ</p>
                                 </div>
                             </li>
                         ))}
                     </ul>
                     <div className="cart-summary">
-                        <h2>Total: ${totalPrice.toFixed(2)}</h2>
+                        <h2>Total: {totalPrice.toLocaleString('vi-VN')}d</h2>
                         <button className="checkout-button" onClick={handleCheckout}>
                             Proceed to Checkout
                         </button>
