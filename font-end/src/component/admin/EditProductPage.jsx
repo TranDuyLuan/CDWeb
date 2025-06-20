@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import '../../style/addProduct.css'
 import ApiService from "../../service/ApiService";
+import {uploadToCloudinary} from "../../utils/cloudinaryUpload";
 
 
 const EditProductPage = () => {
@@ -42,14 +43,16 @@ const EditProductPage = () => {
         e.preventDefault();
         try {
             const formData = new FormData();
-            if(image){
-                formData.append('image', image);
+            if (image) {
+                const uploadedUrl = await uploadToCloudinary(image);
+                formData.append('imageUrl', uploadedUrl);
             }
+
             formData.append('productId', productId);
             formData.append('categoryId', categoryId);
             formData.append('name', name);
             formData.append('description', description);
-            formData.append('price', price);
+            formData.append('price', parseFloat(price));
             formData.append('sizeName', sizeName);
 
 
@@ -65,6 +68,7 @@ const EditProductPage = () => {
         } catch (error) {
             setMessage(error.response?.data?.message || error.message || 'unable to update product')
         }
+
     }
 
     return(
