@@ -14,6 +14,7 @@ const EditProductPage = () => {
     const [message, setMessage] = useState('');
     const [price, setPrice] = useState('');
     const [imageUrl, setImageUrl] = useState(null);
+    const [sizeName, setSizeName] = useState('');
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -26,6 +27,7 @@ const EditProductPage = () => {
                 setPrice(response.product.price);
                 setCategoryId(response.product.categoryId);
                 setImageUrl(response.product.imageUrl);
+                setSizeName(response.product.sizeName);
             })
         }
     }, [productId]);
@@ -48,6 +50,8 @@ const EditProductPage = () => {
             formData.append('name', name);
             formData.append('description', description);
             formData.append('price', price);
+            formData.append('sizeName', sizeName);
+
 
             const response = await ApiService.updateProduct(formData);
             if (response.status === 200) {
@@ -68,30 +72,37 @@ const EditProductPage = () => {
             <h2>Edit Produc</h2>
             {message && <div className="message">{message}</div>}
             <input type="file" onChange={handleImageChange}/>
-            {imageUrl && <img src={imageUrl} alt={name} />}
-            <select value={categoryId} onChange={(e)=> setCategoryId(e.target.value)}>
+            {imageUrl && <img src={imageUrl} alt={name}/>}
+            <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
                 <option value="">Select Category</option>
-                {categories.map((cat)=>(
+                {categories.map((cat) => (
                     <option value={cat.id} key={cat.id}>{cat.name}</option>
                 ))}
             </select>
 
-            <input type="text" 
-                placeholder="Product name"
-                value={name}
-                onChange={(e)=> setName(e.target.value)} />
+            <input type="text"
+                   placeholder="Product name"
+                   value={name}
+                   onChange={(e) => setName(e.target.value)}/>
 
-                <textarea 
+            <textarea
                 placeholder="Description"
                 value={description}
-                onChange={(e)=> setDescription(e.target.value)}/>
+                onChange={(e) => setDescription(e.target.value)}/>
 
-                <input type="number" 
-                placeholder="Price"
-                value={price}
-                onChange={(e)=> setPrice(e.target.value)} />
+            <input type="number"
+                   placeholder="Price"
+                   value={price}
+                   onChange={(e) => setPrice(e.target.value)}/>
+            <input
+                type="text"
+                placeholder="Size (S, M, L, XL, XXL)"
+                value={sizeName}
+                onChange={(e) => setSizeName(e.target.value)}
+            />
 
-                <button type="submit">Update</button>
+
+            <button type="submit">Update</button>
         </form>
     );
 }
