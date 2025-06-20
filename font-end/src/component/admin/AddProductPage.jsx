@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../style/addProduct.css'
 import ApiService from "../../service/ApiService";
+import { uploadToCloudinary } from "../../utils/cloudinaryUpload";
 
 const AddProductPage = () => {
 
@@ -22,16 +23,22 @@ const AddProductPage = () => {
     const handleImage = (e) => {
         setImage(e.target.files[0])
     }
+    const [sizeName, setSizeName] = useState('');
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const imageUrl = await uploadToCloudinary(image);
+
             const formData = new FormData();
-            formData.append('image', image);
+            formData.append('imageUrl', imageUrl);
+            // formData.append('image', image);
             formData.append('categoryId', categoryId);
             formData.append('name', name);
             formData.append('description', description);
             formData.append('price', price);
+            formData.append('sizeName', sizeName);
 
             const response = await ApiService.addProduct(formData);
             if (response.status === 200) {
@@ -52,27 +59,34 @@ const AddProductPage = () => {
             <form onSubmit={handleSubmit} className="product-form">
                 <h2>Add Product</h2>
                 {message && <div className="message">{message}</div>}
-                <input type="file" onChange={handleImage} />
-                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} >
+                <input type="file" onChange={handleImage}/>
+                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
                     <option value="">Select Category</option>
-                    {categories.map((cat)=>(
+                    {categories.map((cat) => (
                         <option value={cat.id} key={cat.id}>{cat.name}</option>
                     ))}
                 </select>
-                <input type="text" 
-                placeholder="Product name"
-                value={name}
-                onChange={(e)=> setName(e.target.value)} />
+                <input type="text"
+                       placeholder="Product name"
+                       value={name}
+                       onChange={(e) => setName(e.target.value)}/>
 
-                <textarea 
-                placeholder="Description"
-                value={description}
-                onChange={(e)=> setDescription(e.target.value)}/>
+                <textarea
+                    placeholder="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}/>
 
-                <input type="number" 
-                placeholder="price"
-                value={price}
-                onChange={(e)=> setPrice(e.target.value)} />
+                <input type="number"
+                       placeholder="price"
+                       value={price}
+                       onChange={(e) => setPrice(e.target.value)}/>
+                <input
+                    type="text"
+                    placeholder="Size (S, M, L, XL XXL)"
+                    value={sizeName}
+                    onChange={(e) => setSizeName(e.target.value)}
+                />
+
 
                 <button type="submit">Add Product</button>
             </form>
