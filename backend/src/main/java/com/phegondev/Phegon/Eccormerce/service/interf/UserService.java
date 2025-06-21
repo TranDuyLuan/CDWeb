@@ -14,6 +14,8 @@ public interface UserService {
     Response updateUserProfile(UpdateUserProfileRequest request);
     Response loginWithGoogle(String idToken);
     Response loginWithFacebook(String accessToken);
+    void deleteById(Long id);
+
 
 
 

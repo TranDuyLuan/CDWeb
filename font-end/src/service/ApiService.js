@@ -17,6 +17,19 @@ export default class ApiService {
         const response = await axios.post(`${this.BASE_URL}/auth/register`, registration)
         return response.data;
     }
+    static async getAllUsers() {
+        const response = await axios.get(`${this.BASE_URL}/user/get-all`, {
+            headers: this.getHeader()
+        });
+        return response.data;
+    }
+    static async deleteUser(id) {
+        const response = await axios.delete(`${this.BASE_URL}/user/${id}`, {
+            headers: this.getHeader()
+        });
+        return response.data;
+    }
+
 
 
     static async loginUser(loginDetails) {

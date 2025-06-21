@@ -36,6 +36,13 @@ public class UserController {
         Response response = userService.updateUserProfile(request);
         return ResponseEntity.ok(response);
     }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        userService.deleteById(id);
+        return ResponseEntity.ok(Map.of("message", "Xóa người dùng thành công"));
+    }
+
 
 
 

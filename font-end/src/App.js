@@ -23,6 +23,8 @@ import EditProductPage from './component/admin/EditProductPage';
 import AdminOrdersPage from './component/admin/AdminOrderPage';
 import AdminOrderDetailsPage from './component/admin/AdminOrderDetailsPage';
 import ChangePasswordPage from "./component/pages/ChangePasswordPage";
+import UserManagementPage from './component/admin/UserManagementPage';
+
 
 function App() {
   return (
@@ -57,6 +59,9 @@ function App() {
               <Route path='/admin/orders' element={<AdminRoute element={<AdminOrdersPage/>}/>}/>
               <Route path='/admin/order-details/:itemId' element={<AdminRoute element={<AdminOrderDetailsPage/>}/>}/>
               <Route path="/change-password" element={<ChangePasswordPage />} />
+              <Route path="/admin/users" element={<AdminRoute element={<UserManagementPage />} />} />
+
+
 
             </Routes>
           </div>

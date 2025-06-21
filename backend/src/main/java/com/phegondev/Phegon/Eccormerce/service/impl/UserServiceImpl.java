@@ -303,6 +303,14 @@ public class UserServiceImpl implements UserService {
 
         return shuffled.toString();
     }
+    @Override
+    public void deleteById(Long id) {
+        if (!userRepo.existsById(id)) {
+            throw new NotFoundException("User not found with ID: " + id);
+        }
+        userRepo.deleteById(id);
+    }
+
 
 
 
