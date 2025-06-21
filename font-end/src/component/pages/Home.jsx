@@ -37,11 +37,11 @@ const Home = () => {
                 const sortedByDate = [...allProducts].sort(
                     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
                 );
-                setNewestProducts(sortedByDate.slice(0, 8));
+                setNewestProducts(sortedByDate.slice(0, 7));
 
                 // Tách sản phẩm bán chạy
                 const sortedBySold = [...allProducts].sort((a, b) => b.sold - a.sold);
-                setBestSellingProducts(sortedBySold.slice(0, 8));
+                setBestSellingProducts(sortedBySold.slice(0, 7));
 
                 // Phân trang cho tất cả sản phẩm
                 setTotalPages(Math.ceil(allProducts.length / itemsPerPage));

@@ -17,7 +17,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3 ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 250px;
 }
 
@@ -61,7 +61,7 @@
     font-size: 1em;
     margin: 10px 0;
     padding: 10px 20px;
-    transition: background-color 0.3 ease;
+    transition: background-color 0.3s ease;
 }
 
 .product-item button:hover {
@@ -89,7 +89,7 @@
     cursor: pointer;
     font-size: 1.2em;
     padding: 5px 10px;
-    transition: background-color 0.3 ease;
+    transition: background-color 0.3s ease;
 
 }
 .quantity-controls button:hover{
