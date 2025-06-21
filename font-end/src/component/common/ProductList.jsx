@@ -76,7 +76,7 @@ const ProductList = ({ products }) => {
                                     <button onClick={() => incrementItem(product)}>+</button>
                                 </div>
                                 <p className="total-price">
-                                    Total: ${(product.price * cartItem.quantity).toLocaleString('vi-VN')}
+                                    Total: {(product.price * cartItem.quantity).toLocaleString('vi-VN')}đ
                                 </p>
                             </div>
                         ) : (

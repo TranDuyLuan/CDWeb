@@ -23,8 +23,24 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         }
     };
 
+    const goToPrevPage = () => {
+        if (currentPage > 1) {
+            onPageChange(currentPage - 1);
+        }
+    };
+
+    const goToNextPage = () => {
+        if (currentPage < totalPages) {
+            onPageChange(currentPage + 1);
+        }
+    };
+
     return (
         <div className="pagination">
+            <button onClick={goToPrevPage} disabled={currentPage === 1} className="nav-btn">
+                «
+            </button>
+
             {pageNumbers.map((number) => (
                 <button
                     key={number}
@@ -34,6 +50,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                     {number}
                 </button>
             ))}
+
+            <button onClick={goToNextPage} disabled={currentPage === totalPages} className="nav-btn">
+                »
+            </button>
 
             <div className="goto-page">
                 <input

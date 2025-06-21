@@ -51,3 +51,19 @@
 .goto-page button:hover {
     background-color: #874f17;
 }
+/* Nút khi bị disable (không nhấn được) */
+.pagination button:disabled,
+.goto-page button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Tùy chọn thêm nếu muốn phân biệt nút đặc biệt « » */
+.pagination button.nav-btn {
+    font-weight: bold;
+    background-color: #444;
+}
+
+.pagination button.nav-btn:hover {
+    background-color: #333;
+}
